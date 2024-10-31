@@ -91,7 +91,7 @@
 
     <h1>Wackamole Grindr</h1>
     <form id="urlForm">
-        <input type="text" id="urlInput" placeholder="Enter website URL (e.g., https://www.example.com)" required>
+        <input type="text" id="urlInput" placeholder="" required>
         <button type="submit" id="loadButton">Load</button>
     </form>
     <div id="errorMessage"></div>
@@ -112,7 +112,7 @@
                 const url = new URL(urlInput);
                 if (!url.protocol.startsWith('http')) throw new Error();
             } catch (_) {
-                errorMessage.textContent = 'Please enter a valid URL starting with http:// or https://';
+                errorMessage.textContent = '';
                 return;
             }
 
@@ -129,7 +129,7 @@
 
             iframe.onerror = function() {
                 loader.style.display = 'none';
-                errorMessage.textContent = 'Failed to load the website. It might not allow embedding.';
+                errorMessage.textContent = '';
             };
         });
     </script>
