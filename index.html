@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wackamo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #urlForm {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #urlInput {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        #urlInput:focus {
+            border-color: #66afe9;
+        }
+        #loadButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #28a745;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        #loadButton:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        #iframeContainer {
+            width: 100%;
+            height: 80vh;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #errorMessage {
+            text-align: center;
+            color: red;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        .loader {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            #urlInput {
+                width: 70%;
+            }
+            #loadButton {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Wackamole Grindr</h1>
+    <form id="urlForm">
+        <input type="text" id="urlInput" placeholder="Enter website URL (e.g., https://www.example.com)" required>
+        <button type="submit" id="loadButton">Load</button>
+    </form>
+    <div id="errorMessage"></div>
+    <div class="loader" id="loader"></div>
+    <div id="iframeContainer">
+        <iframe id="contentFrame" src=""></iframe>
+    </div>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const urlInput = document.getElementById('urlInput').value.trim();
+            const iframe = document.getElementById('contentFrame');
+            const errorMessage = document.getElementById('errorMessage');
+            const loader = document.getElementById('loader');
+
+            try {
+                const url = new URL(urlInput);
+                if (!url.protocol.startsWith('http')) throw new Error();
+            } catch (_) {
+                errorMessage.textContent = 'Please enter a valid URL starting with http:// or https://';
+                return;
+            }
+
+            errorMessage.textContent = '';
+            loader.style.display = 'block';
+            iframe.style.display = 'none';
+
+            iframe.src = urlInput;
+
+            iframe.onload = function() {
+                loader.style.display = 'none';
+                iframe.style.display = 'block';
+            };
+
+            iframe.onerror = function() {
+                loader.style.display = 'none';
+                errorMessage.textContent = 'Failed to load the website. It might not allow embedding.';
+            };
+        });
+    </script>
+
+</body>
+</html>
